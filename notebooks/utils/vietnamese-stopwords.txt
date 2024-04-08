@@ -113,7 +113,6 @@ bệt
 bị
 bị chú
 bị vì
-bỏ
 bỏ bà
 bỏ cha
 bỏ cuộc
@@ -500,7 +499,6 @@ em
 em em
 giá trị
 giá trị thực tế
-giảm
 giảm chính
 giảm thấp
 giảm thế
@@ -648,7 +646,6 @@ không được
 không đầy
 không để
 khẳng định
-khỏi
 khỏi nói
 kể
 kể cả
@@ -1260,6 +1257,13 @@ sớm ngày
 sở dĩ
 sử dụng
 sự
+va
+voi
+dat
+dàt
+dát
+t
+
 sự thế
 sự việc
 tanh
@@ -1270,7 +1274,6 @@ tha hồ
 tha hồ chơi
 tha hồ ăn
 than ôi
-thanh
 thanh ba
 thanh chuyển
 thanh không
@@ -1309,7 +1312,6 @@ tháng
 tháng ngày
 tháng năm
 tháng tháng
-thêm
 thêm chuyện
 thêm giờ
 thêm vào
@@ -1503,7 +1505,6 @@ tôi con
 tông tốc
 tù tì
 tăm tắp
-tăng
 tăng chúng
 tăng cấp
 tăng giảm
@@ -1529,7 +1530,6 @@ tấm bản
 tấm các
 tấn
 tấn tới
-tất cả
 tất cả bao nhiêu
 tất thảy
 tất tần tật
@@ -1682,8 +1682,6 @@ xa tanh
 xa tắp
 xa xa
 xa xả
-xem
-xem lại
 xem ra
 xem số
 xin gặp
