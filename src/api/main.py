@@ -1,8 +1,8 @@
-import os
 from typing import Final
+import os
 from dotenv import load_dotenv
-from nlu.chatbot import Chatbot
 from discord import Intents, Client, Message
+from responses import get_response
 
 load_dotenv()
 TOKEN: Final[str] = os.getenv("DISCORD_TOKEN")
@@ -10,8 +10,6 @@ TOKEN: Final[str] = os.getenv("DISCORD_TOKEN")
 intents: Intents = Intents.default()
 intents.message_content = True
 client: Client = Client(intents=intents)
-
-chatbot = Chatbot("output/savedmodels/entity_v1.h5", "output/savedmodels/intent_v1.bin")
 
 
 async def send_message(message: Message, user_message: str) -> None:
@@ -23,7 +21,7 @@ async def send_message(message: Message, user_message: str) -> None:
         user_message = user_message[1:]
 
     try:
-        response: str = chatbot.predict(user_message)
+        response: str = get_response(user_message)
         (
             await message.author.send(response)
             if is_private
