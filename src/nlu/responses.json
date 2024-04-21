@@ -1,0 +1,253 @@
+{
+    "view_menu": {
+        "Unknown": {
+            "responses": [
+                "Xin chào, rất vui được phục vụ bạn! Dưới đây là menu của tiệm chúng mình, mời bạn lựa chọn: ",
+                "Dưới đây là toàn bộ menu của nhà hàng chúng mình. Bạn muốn thưởng thức món nào hôm nay nhỉ?",
+                "Mời bạn tham khảo menu của cừa hàng nhé: ",
+                "Menu của của tiệm chúng mình đây, bạn có thể tham khảo nhé: ",
+                "Bạn có thể tìm món ở menu dưới đây và nhắn cho mình để đặt hàng nhé: "
+            ]
+        },
+        "Pizza": {
+            "responses": [
+                "Dưới đây là thông tin về sản phẩm mà bạn quan tâm: ",
+                "Mình nhận thông tin nhé, đây là sản phẩm bạn muốn tìm ạ: ",
+                "Thông tin sản phẩm bạn muốn tìm đây nhé: ",
+                "Sản phẩm này có thông tin chi tiết như sau: ",
+                "Bạn có thể tham khảo thông tin của sản phẩm ở đây nhé: "
+            ]
+        },
+        "Others": {
+            "responses": [
+                "Rất tiếc, hiện tại chúng tôi chỉ có thông tin chi tiết về các loại Pizza. Các yếu tố như kích thước, số lượng, loại vỏ bánh, và topping hiện không có sẵn thông tin cụ thể.",
+                "Hiện tại, chúng tôi không cung cấp thông tin chi tiết về số lượng, kích thước, loại vỏ bánh, và topping mà chỉ có thông tin về Pizza. Mời bạn tham khảo các loại Pizza có sẵn.",
+                "Thông tin về kích thước, số lượng, loại vỏ bánh, và topping không có trong menu của chúng tôi. Chúng tôi chỉ cung cấp thông tin đầy đủ về các loại Pizza.",
+                "Bạn đang hỏi về các chi tiết như số lượng, kích thước, loại vỏ bánh, và topping. Xin lỗi vì sự bất tiện này, nhưng menu của chúng tôi chỉ bao gồm thông tin về Pizza.",
+                "Các thông tin về kích thước, số lượng, loại vỏ bánh, và topping hiện tại không có trong menu của chúng tôi. Vui lòng xem các loại Pizza để có thông tin chi tiết hơn."
+            ]
+        }
+    },
+    "view_cart": {
+        "Unknown": {
+            "responses": [
+                "Dưới đây là thông tin toàn bộ giỏ hàng của bạn: ",
+                "Toàn bộ thông tin giỏ hàng của bạn đây, hãy kiểm tra giúp mình nha: ",
+                "Toàn bộ món ăn trong giỏ hàng hiện tại của bạn đây ạ: ",
+                "Chi tiết toàn bộ giỏ hàng hiện tại của bạn đây: ",
+                "Hiện tại giỏ hàng của bạn bao gồm những món sau đây: "
+            ]
+        },
+        "Pizza": {
+            "responses": [
+                "Giỏ hàng hiện tại của bạn đã có pizza [pizza], số lượng là [quantity], kích thước [size], với topping là [topping]",
+                "Pizza [pizza] trong giỏ hàng của bạn có thông tin như sau: pizza [pizza], số lượng là [quantity], kích thước [size], với đồ ăn kèm là [topping], đế bánh [crust]",
+                "Pizza [pizza], có số lượng [quantity], kích thước [size], kèm thêm topping là [topping], đế bánh [crust]",
+                "Vâng! Đây là thông tin về pizza [pizza] trong giỏ hàng của bạn: ",
+                "Pizza [pizza] được đặt trong đơn hàng của bạn có số lượng [quantity], kích thước [size], với topping là [topping]."
+            ]
+        },
+        "Others": {
+            "responses": [
+                "Để xem thông tin chi tiết về các món trong giỏ hàng, bạn cần phải chỉ định tên của pizza mà bạn muốn kiểm tra. Vui lòng cung cấp tên pizza để tôi có thể hiển thị thông tin chính xác cho bạn.",
+                "Hiện tại bạn chưa chỉ định pizza cụ thể nào trong giỏ hàng. Xin hãy nói rõ tên của pizza bạn muốn xem, để tôi có thể cung cấp thông tin chi tiết về số lượng, kích thước, topping, và loại đế.",
+                "Tôi nhận thấy bạn muốn xem thông tin giỏ hàng nhưng không có tên pizza cụ thể. Vui lòng chỉ rõ tên pizza để tôi có thể trợ giúp bạn tốt hơn.",
+                "Bạn cần chỉ định tên pizza trong giỏ hàng của bạn để tôi có thể cung cấp thông tin đầy đủ về nó, bao gồm số lượng, kích thước, các loại topping, và loại đế bánh.",
+                "Xin lỗi, tôi không thể hiển thị thông tin giỏ hàng khi bạn không cung cấp tên pizza. Hãy chỉ định pizza bạn quan tâm để xem thông tin chi tiết."
+            ]
+        }
+    },
+    "add_to_cart": {
+        "Unknown": {
+            "responses": [
+                "Bạn muốn đặt pizza nhưng chưa chỉ định loại nào. Vui lòng cho biết tên pizza bạn muốn đặt hoặc mô tả loại pizza mà bạn thích để mình có thể giúp bạn.",
+                "Mình thấy bạn muốn đặt pizza nhưng không rõ loại nào. Hãy nói rõ bạn thích pizza loại nào, kích thước ra sao và bạn muốn topping gì nhé!",
+                "Để tiến hành đặt pizza, bạn cần cung cấp thêm thông tin như loại pizza bạn thích, số lượng, kích thước và loại đế. Vui lòng chỉ định để mình có thể giúp bạn tốt nhất!",
+                "Bạn đã sẵn sàng để thêm một chiếc pizza vào giỏ hàng của mình nhưng tôi cần biết loại nào bạn muốn. Hãy mô tả hoặc nói tên pizza mà bạn muốn đặt.",
+                "Xin hãy cho biết bạn muốn đặt loại pizza nào, kích thước thế nào và bạn có muốn thêm topping gì không? Giúp mình cung cấp thông tin đầy đủ để thực hiện đơn hàng của bạn."
+            ]
+        },
+        "All": {
+            "responses": [
+                "Bạn đã chọn đặt [quantity] [pizza] [size] [crust] với [topping]. Vui lòng kiểm tra lại thông tin để mình có thể tiến hành thêm vào giỏ hàng của bạn. Nhắn 'Y' nếu thông tin đã chính xác hoặc 'N' nếu có sai sót trong món.",
+                "Xác nhận giúp mình: [quantity] [pizza] [size] [crust], và topping: [topping]. Nếu thông tin chính xác, nhắn 'Y' để xác nhận, nếu không, vui lòng nhắn 'N'.",
+                "Bạn đang thêm [quantity] [pizza] [size] [crust] với topping [topping] vào giỏ hàng. Hãy nhắn 'Y' nhằm xác nhận để mình có thể tiến hành thêm vào giỏ hàng. Hoặc 'N' nếu thông tin mình nhận được có sai sót.",
+                "Bạn có chắc chắn muốn thêm [quantity] [pizza] [size] [crust] với [topping] vào giỏ hàng không? Vui lòng nhắn 'Y' để xác nhận và 'N' nếu bạn muốn chỉnh sửa."
+            ]
+        },
+        "missing_pizza": {
+            "responses": [
+                "loại pizza bạn muốn (Pepperoni, Margherita, v.v.)",
+                "một loại pizza (như Seafood Deluxe, BBQ Chicken, v.v.)",
+                "loại pizza (BBQ Beefy, Meat Lovers, v.v.),",
+                "pizza nào bạn muốn đặt (Hawaiann, Double Cheese Burger, v.v.)",
+                "mẫu pizza (Tropicana Seafood, New Oceania, v.v.) bạn thích"
+            ]
+        },
+        "missing_quantity": {
+            "responses": [
+                "số lượng pizza",
+                "số lượng bạn cần",
+                "bao nhiêu chiếc",
+                "số lượng",
+                "bao nhiêu chiếc bạn muốn"
+            ]
+        },
+        "missing_size": {
+            "responses": [
+                "kích thước của pizza (nhỏ, vừa, lớn)",
+                "kích thước (nhỏ, vừa, lớn)",
+                "kích thước pizza bạn muốn (nhỏ, vừa, lớn)",
+                "pizza kích thước nào (nhỏ, vừa, lớn)",
+                "chọn kích thước (nhỏ, vừa, lớn)"
+            ]
+        },
+        "missing_crust": {
+            "responses": [
+                "loại đế cho pizza (mỏng, dày)",
+                "kiểu đế bạn muốn (mỏng, dày)",
+                "loại đế (mỏng, dày)",
+                "chọn loại đế (mỏng, dày)",
+                "đế pizza (mỏng, dày)"
+            ]
+        },
+        "missing_topping": {
+            "responses": [
+                "topping bạn muốn thêm (mực, hành tây, hành tím, v.v.)",
+                "topping gì (bắp, ba chỉ bò nướng, v.v.)",
+                "loại topping (thanh cua, nấm rơm, ớt xanh, v.v.)",
+                "các loại topping (sò điệp, cà chua, cà rốt, v.v.)",
+                "chọn topping (rau củ, thịt xông khói, v.v.)"
+            ]
+        },
+        "missing_template": {
+            "responses": [
+                "Vui lòng chọn [missing_entity] để hoàn tất tiến trình thêm món vào giỏ hàng.",
+                "Hãy cung cấp [missing_entity] mà bạn muốn đặt.",
+                "Xin vui lòng chỉ định [missing_entity] để chúng tôi có thể tiếp tục quy trình thêm món vào giỏ hàng.",
+                "Chúng tôi cần bạn cung cấp [missing_entity] trước khi chúng tôi thêm vào giỏ hàng.",
+                "Để tiến hành đặt món vào giỏ, vui lòng chọn rõ ràng [missing_entity] bạn muốn."
+            ]
+        }
+    },
+    "remove_from_cart": {
+        "Unknown": {
+            "responses": [
+                "Bạn vui lòng chỉ định loại pizza bạn muốn xóa khỏi giỏ hàng nhé",
+                "Bạn muốn xóa pizza nào ạ?",
+                "Hiện tại đơn hàng của bạn có khá nhiều pizza, bạn có thể cho mình biết loại pizza bạn muốn xóa không?",
+                "Bạn ơi, bạn muốn xóa pizza nào hãy ghi chú lại giúp mình nha.",
+                "Vui lòng chỉ định loại pizza mà bạn muốn xóa giúp mình nhé."
+            ]
+        },
+        "Pizza": {
+            "responses": [
+                "Mình đã xóa pizza [pizza] khỏi giỏ hàng của bạn rồi nhé. Bạn cần mình giúp gì nữa không?",
+                "Toàn bộ pizza [pizza] đã được xóa khỏi giỏ hàng. Bạn kiểm tra lại giúp mình nha.",
+                "Đã xóa tất cả pizza [pizza] trong giỏ hàng. Bạn cần hỗ trợ gì thêm không ạ?",
+                "Những chiếc pizza loại này đã được cửa hàng xóa rồi nha. Bạn có thể kiểm tra lại giỏ hàng nha.",
+                "Mình đã xóa toàn bộ pizza [pizza] khỏi đơn hàng của bạn rồi nhé."
+            ]
+        },
+        "Pizza_Quantity": {
+            "responses": [
+                "Mình đã xoá [quantity] chiếc pizza [pizza] ra khỏi giỏ hàng rồi nhé.",
+                "Với loại pizza [pizza], mình đã xóa [quantity] chiếc giúp bạn rồi nhé. Bạn có thể kiểm tra lại giỏ hàng.",
+                "[quantity] chiếc pizza loại [pizza] đã được xóa bỏ khỏi đơn hàng của bạn.",
+                "Mình đã xóa [quantity] chiếc pizza [pizza] rồi nhé.",
+                "Giỏ hàng đã được bỏ bớt [quantity] chiếc pizza [pizza] rồi bạn nha. Vui lòng kiểm tra lại giúp mình."
+            ]
+        }
+    },
+    "modify_cart_item": {
+        "Unknown": {
+            "responses": [
+                "Loại pizza bạn muốn sửa đổi thông tin là pizza nào ạ?",
+                "Bạn muốn chỉnh sửa pizza nào ạ? Mình chỉ mới ghi nhận những thông tin bổ sung của pizza thôi ạ",
+                "Mình nhận được thông tin chỉnh sửa của bạn rồi nhé, cho hỏi pizza bạn muốn điều chỉnh là pizza nào ạ?",
+                "Vui lòng ghi chú lại giúp mình loại pizza nào bạn muốn sửa thông tin nha.",
+                "Cho mình hỏi bạn muốn chỉnh sửa pizza nào ạ?"
+            ]
+        },
+        "Pizza": {
+            "responses": [
+                "Đã chỉnh sửa lại thông tin của pizza [pizza].",
+                "Cửa hàng đã điều chỉnh thông tin pizza [pizza] của bạn rồi nhé.",
+                "Cửa hàng đã đổi loại pizza từ [pizza 1] sang [pizza 2] cho bạn rồi ạ",
+                "Ok. Mình đã cập nhật kích thước của pizza [pizza] cho bạn rồi nhé.",
+                "Ok. Mình đã cập nhật điều chỉnh đế bánh pizza của pizza [pizza] cho bạn rồi nhé."
+            ]
+        }
+    },
+    "confirm_order": {
+        "Unknown": {
+            "responses": [
+                "Giỏ hàng của bạn đây, hãy xác nhận lại giúp mình nhé. Nhắn Y nếu thông tin đã chính xác hoặc N nếu có sai sót trong giỏ hàng.",
+                "OK đợi mình tí. Đơn hàng của bạn đây nhé, bạn kiểm tra lại và xác nhận giúp mình ạ. Nhắn Y nếu thông tin đã chính xác hoặc N nếu có sai sót trong giỏ hàng.",
+                "Toàn bộ giỏ hàng của bạn đây ạ. Vui lòng xác nhận giúp mình nha. Nhắn Y nếu thông tin đã chính xác hoặc N nếu có sai sót trong giỏ hàng.",
+                "Bạn kiểm tra lại giỏ hàng dưới đây rồi xác nhận giúp mình. Nhắn Y nếu thông tin đã chính xác hoặc N nếu có sai sót trong giỏ hàng.",
+                "Đây là toàn bộ món ăn trong đơn hàng của bạn. Hãy kiểm tra lại và xác nhận cho mình nhé. Nhắn Y nếu thông tin đã chính xác hoặc N nếu có sai sót trong giỏ hàng."
+            ]
+        }
+    },
+    "track_order": {
+        "Unknown": {
+            "responses": [
+                "Đơn hàng đang trên đường giao đến bạn. Vui lòng chờ thêm vài phút ạ.",
+                "Đơn hàng của bạn đang được nhân viên chuẩn bị và sắp đi giao rồi nhé.",
+                "Đơn hàng đang giao, vui lòng giữ máy để shipper có thể liên lạc ạ.",
+                "Bếp đang chuẩn bị món cho bạn, chút nữa pizza sẽ được giao ngay ạ.",
+                "Bạn đợi 15 phút nữa nhé, shipper đang giao hàng đến bạn ạ."
+            ]
+        },
+        "Order": {
+            "responses": [
+                "Đơn hàng [order id] của bạn đang trên đường giao. Hãy giữ máy để người giao hàng liên lạc cho bạn nhé.",
+                "Shipper đang giao đơn hàng [order id] cho bạn rồi nha. Bạn vui lòng đợi chút xíu ạ.",
+                "Đơn hàng [order id] đang giao đến địa chỉ của bạn, vui lòng giữ máy để shipper có thể liên lạc ạ.",
+                "Bạn đợi một lúc nhé, shipper đang giao đơn hàng [order id] đến địa chỉ được cung cấp ạ.",
+                "Nhân viên đang chuẩn bị món cho bạn, 5 phút sipper sẽ giao ngay ạ."
+            ]
+        }
+    },
+    "cancel_order": {
+        "Unknown": {
+            "responses": [
+                "Yêu cầu hủy đơn hàng thành công.",
+                "Mình đã hủy đơn hàng vừa rồi cho bạn rồi nhé",
+                "Đã hủy đơn đặt hàng gần nhất. Bạn cần hỗ trợ gì nữa không?",
+                "Cửa hàng đã hủy đơn hàng gần nhất của bạn rồi ạ.",
+                "Đơn hàng gần nhất của bạn đã được hủy. Bạn cần giúp gì nữa không?"
+            ]
+        },
+        "Order": {
+            "responses": [
+                "Yêu cầu hủy đơn hàng [order id] thành công.",
+                "Đã hủy đơn đặt hàng [order id], bạn muốn hỗ trợ gì thêm không?",
+                "Hoàn tất hủy đơn [order id].",
+                "Nhân viên đã hủy đơn hàng [order id] cho bạn rồi nhé.",
+                "Đơn hàng [order id] đã được hủy rồi bạn nha. Bạn cần mình giúp gì nữa không?"
+            ]
+        }
+    },
+    "provide_info": {
+        "Unknown": {
+            "responses": [
+                "Bạn vui lòng cho mình hỏi các thông tin: tên khách hàng, địa chỉ nhận hàng, số điện thoại và hình thức thanh toán ạ?",
+                "OK, bạn cho mình xin lại thông tin: tên khách hàng, địa chỉ nhận hàng, số điện thoại và phương thức thanh toán được không?",
+                "Vui lòng ghi lại thông tin cá nhân: tên khách hàng, địa chỉ nhận hàng, số điện thoại và phương thức thanh toán giúp mình nhé.",
+                "Mình xin hỏi lại thông tin: tên khách hàng, địa chỉ nhận hàng, số điện thoại và phương thức thanh toán của bạn được không ạ?",
+                "Bạn có thể ghi lại thông tin của bạn như tên, địa chỉ nhận hàng, số điện thoại và hình thức thanh toán là gì để mình lên đơn ạ."
+            ]
+        }
+    },
+    "Unknown": {
+        "responses": [
+            "Mình không hiểu ý của bạn. Vui lòng diễn tả lại giúp mình nhé",
+            "Xin lỗi, mình không hiểu bạn muốn nói gì. Bạn có thể nói rõ hơn được không?",
+            "Mình không rõ ý của bạn lắm. Bạn có thể giải thích rõ hơn yêu cầu của bạn hoặc đưa ra một số chi tiết cụ thể được không?",
+            "Mình chưa rõ ý bạn lắm. Bạn có thể mô tả cụ thể hơn về yêu cầu của bạn không?",
+            "Rất tiếc, mình không hiểu bạn đang cần gì. Bạn vui lòng nói rõ hơn để mình có thể giúp đỡ?"
+        ]
+    }
+}

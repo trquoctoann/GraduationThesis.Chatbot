@@ -11,7 +11,9 @@ intents: Intents = Intents.default()
 intents.message_content = True
 client: Client = Client(intents=intents)
 
-chatbot = Chatbot("output/savedmodels/entity_v1.h5", "output/savedmodels/intent_v1.bin")
+chatbot = Chatbot(
+    "output/savedmodels/entity_v1.h5", "output/savedmodels/intent_v1.bin", "src/nlu/responses.json"
+)
 
 
 async def send_message(message: Message, user_message: str) -> None:
@@ -24,11 +26,7 @@ async def send_message(message: Message, user_message: str) -> None:
 
     try:
         response: str = chatbot.predict(user_message)
-        (
-            await message.author.send(response)
-            if is_private
-            else await message.channel.send(response)
-        )
+        (await message.author.send(response) if is_private else await message.channel.send(response))
     except Exception as e:
         print(e)
 
