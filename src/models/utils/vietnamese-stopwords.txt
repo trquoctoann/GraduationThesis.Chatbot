@@ -5,9 +5,6 @@ ai ai
 ai nấy
 ai đó
 alô
-đi
-t
-kèm
 amen
 anh
 anh ấy
@@ -23,6 +20,7 @@ bao lâu
 bao nhiêu
 bao nả
 bay biến
+đồ
 biết
 biết bao
 biết bao nhiêu
@@ -445,7 +443,6 @@ do
 do vì
 do vậy
 do đó
-duy
 duy chỉ
 duy có
 dài
@@ -924,6 +921,7 @@ nhân dịp
 nhân tiện
 nhé
 nhìn
+hén
 nhìn chung
 nhìn lại
 nhìn nhận
@@ -1449,7 +1447,6 @@ trước tiên
 trước tuổi
 trước đây
 trước đó
-trả
 trả của
 trả lại
 trả ngay
@@ -1462,7 +1459,6 @@ trỏng
 trời đất ơi
 trở thành
 trừ phi
-trực tiếp
 trực tiếp làm
 tuy
 tuy có
@@ -1481,7 +1477,6 @@ tuổi
 tuổi cả
 tuổi tôi
 tà tà
-tên
 tên chính
 tên cái
 tên họ
@@ -1531,7 +1526,6 @@ tạo điều kiện
 tấm
 tấm bản
 tấm các
-tấn
 tấn tới
 tất cả bao nhiêu
 tất thảy
@@ -1688,6 +1682,7 @@ xa xả
 xem ra
 xem số
 xin gặp
+xin chào
 xin vâng
 xiết bao
 xon xón
