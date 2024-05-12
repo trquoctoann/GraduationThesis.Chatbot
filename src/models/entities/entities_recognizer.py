@@ -1,22 +1,36 @@
 import re
+
 from joblib import load
-from models.entities.preprocessing import ner_preprocessing
+
+from models.utils.preprocessing import preprocessing
+
+order_labels = [
+    "B-Quantity",
+    "B-Pizza",
+    "I-Pizza",
+    "B-Topping",
+    "B-Size",
+    "I-Size",
+    "O",
+    "B-Crust",
+    "I-Crust",
+]
+customer_info_labels = [
+    "B-Cus",
+    "I-Cus",
+    "B-Phone",
+    "B-Address",
+    "I-Address",
+    "B-Payment",
+    "I-Payment",
+    "O",
+]
 
 
-class CRFPizzaEntity:
-    def __init__(self, model_path):
+class EntitiesRecognizer:
+    def __init__(self, model_path: str, is_order: bool):
         self.model = self._load_model(model_path)
-        self.labels = [
-            "B-Quantity",
-            "B-Pizza",
-            "I-Pizza",
-            "B-Topping",
-            "B-Size",
-            "I-Size",
-            "O",
-            "B-Crust",
-            "I-Crust",
-        ]
+        self.labels = order_labels if is_order else customer_info_labels
 
     def _load_model(self, model_path):
         return load(model_path)
@@ -71,7 +85,7 @@ class CRFPizzaEntity:
         }
 
     def predict(self, text):
-        text = ner_preprocessing(text)
+        text = preprocessing(text, True)
         processed_sentence = self.process_sentence(text)
         words = processed_sentence["words"]
         features = self.sentence_features(words)

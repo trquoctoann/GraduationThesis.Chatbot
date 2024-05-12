@@ -1,22 +1,24 @@
-import re
 import json
+import re
 import unicodedata
 
 
-def read_tokenize_dictionary(
-    dictionary_path="src/models/entities/tokenize_dictionary.json",
-):
+def read_tokenize_dictionary(dictionary_path="models/utils/tokenize_dictionary.json"):
     with open(dictionary_path, "r", encoding="utf-8") as file:
         tokenize_dictionary = json.load(file)
     return tokenize_dictionary
 
 
-def read_stop_word_dictionary(
-    dictionary_path="src/models/entities/vietnamese-stopwords.txt",
-):
+def read_stop_word_dictionary(dictionary_path="models/utils/vietnamese-stopwords.txt"):
     with open(dictionary_path, "r", encoding="utf-8") as file:
         stopwords_dictionary = file.read()
     return set(stopwords_dictionary.split("\n"))
+
+
+def read_acronym_dictionary(dictionary_path="models/utils/acronym_dictionary.json"):
+    with open(dictionary_path, "r", encoding="utf-8") as file:
+        acronym_dictionary = json.load(file)
+    return acronym_dictionary
 
 
 def lowercase_text(text: str):
@@ -30,9 +32,11 @@ def remove_diacritic(text: str):
     )
 
 
-def tokenize(text: str, tokenize_dictionary: dict):
+def replace_tokens(text: str, replacement_dictionary: dict):
+    pattern = r"(?<=\d)/(?=\d)"
+    text = re.sub(pattern, " kiệt ", text)
     sorted_items = sorted(
-        tokenize_dictionary.items(), key=lambda x: len(x[0]), reverse=True
+        replacement_dictionary.items(), key=lambda x: len(x[0]), reverse=True
     )
     for original, token in sorted_items:
         pattern = re.compile(r"\b" + re.escape(original) + r"\b", re.IGNORECASE)
@@ -40,8 +44,8 @@ def tokenize(text: str, tokenize_dictionary: dict):
     return text
 
 
-def combined_tokenize(text: str, tokenize_dictionary: dict):
-    tokenized_text = tokenize(text, tokenize_dictionary)
+def translate_sentences(text: str, dictionary: dict):
+    tokenized_text = replace_tokens(text, dictionary)
 
     list_token_tokenized_text = tokenized_text.split()
     token_diacritic_map = {}
@@ -52,7 +56,7 @@ def combined_tokenize(text: str, tokenize_dictionary: dict):
             no_diacritic_text += remove_diacritic(token) + " "
     no_diacritic_text = no_diacritic_text.strip()
 
-    no_diacritic_tokenized_text = tokenize(no_diacritic_text, tokenize_dictionary)
+    no_diacritic_tokenized_text = replace_tokens(no_diacritic_text, dictionary)
     for no_diacritic_token in no_diacritic_tokenized_text.split():
         if "_" in no_diacritic_token:
             start_of_word = float("inf")
@@ -61,7 +65,17 @@ def combined_tokenize(text: str, tokenize_dictionary: dict):
                 part_token = remove_diacritic(part_token)
                 start_of_word = min(start_of_word, token_diacritic_map.get(part_token))
                 end_of_word = max(end_of_word, token_diacritic_map.get(part_token)) + 1
-            list_token_tokenized_text[start_of_word:end_of_word] = [no_diacritic_token]
+
+            skip = False
+            for word in list_token_tokenized_text[start_of_word:end_of_word]:
+                if "_" in word:
+                    skip = True
+                    break
+
+            if not skip:
+                list_token_tokenized_text[start_of_word:end_of_word] = [
+                    no_diacritic_token
+                ]
 
     return " ".join([token for token in list_token_tokenized_text])
 
@@ -77,12 +91,16 @@ def remove_stopwords(text: str, stopwords_dictionary: set):
     return text
 
 
-def ner_preprocessing(
+def preprocessing(
     text: str,
+    is_process_entity: bool = False,
     tokenize_dictionary: dict = read_tokenize_dictionary(),
     stopwords_dictionary: set = read_stop_word_dictionary(),
+    acronym_dictionary: dict = read_acronym_dictionary(),
 ):
     text = lowercase_text(text)
-    text = combined_tokenize(text, tokenize_dictionary)
-    text = remove_stopwords(text, stopwords_dictionary)
+    text = translate_sentences(text, acronym_dictionary)
+    if is_process_entity:
+        text = translate_sentences(text, tokenize_dictionary)
+        text = remove_stopwords(text, stopwords_dictionary)
     return text
