@@ -2,12 +2,12 @@ import json
 import random
 
 import torch
-from transformers import AutoTokenizer
 
-from models.entities.crf_pizza_entity import CRFPizzaEntity
-from models.intents.phobert_pizza_intent import PhoBertPizzaIntent
-from nlu.payload.payload_cart_item import PayloadCartItem
-from nlu.payload.payload_customer_info import PayloadCustomerInfo
+from models.entities.entities_recognizer import EntitiesRecognizer
+from models.intents.intents_recognizer import IntentsRecognizer
+from nlu.payload.request.request_payload_cart_item import (
+    RequestPayloadCartItem,
+)
 from utils.chatbot_utils import (
     InvalidProductName,
     standardize_result,
@@ -16,43 +16,19 @@ from utils.chatbot_utils import (
 
 device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 
-MAX_LEN = 128
-TRAIN_BATCH_SIZE = 16
-VALID_BATCH_SIZE = 16
-TEST_BATCH_SIZE = 16
-EPOCHS = 10
-LEARNING_RATE = 1e-05
-THRESHOLD = 0.5
 
-intent_labels = [
-    "view_menu",
-    "view_cart",
-    "add_to_cart",
-    "remove_from_cart",
-    "modify_cart_item",
-    "confirm_order",
-    "track_order",
-    "cancel_order",
-    "provide_info",
-    "none",
-]
-
-
-class Chatbot:
+class PizzaTalkChatbot:
     def __init__(self, model_entity_path, model_intent_path, responses_template_path):
         self.model_entity = self._load_model_entity(model_entity_path)
         self.model_intent = self._load_model_intent(model_intent_path)
         self.responses_template = self._load_response_template(responses_template_path)
-        self.intent_tokenizer = AutoTokenizer.from_pretrained(
-            "vinai/phobert-base", use_fast=False
-        )
 
     def _load_model_entity(self, model_path):
-        model = CRFPizzaEntity(model_path)
+        model = EntitiesRecognizer(model_path)
         return model
 
     def _load_model_intent(self, model_path):
-        model = PhoBertPizzaIntent()
+        model = IntentsRecognizer()
         model.load_state_dict(torch.load(model_path))
         return model.to(device)
 
@@ -60,31 +36,11 @@ class Chatbot:
         with open(responses_template_path, "r", encoding="utf-8") as file:
             return json.load(file)
 
-    def predict_entity(self, text):
-        result = self.model_entity.predict(text)
-        return result
+    def identify_intent(self, message):
+        return self.model_intent.predict(message)
 
-    def predict_intent(self, text):
-        encoded_text = self.intent_tokenizer.encode_plus(
-            text,
-            max_length=MAX_LEN,
-            add_special_tokens=True,
-            return_token_type_ids=True,
-            pad_to_max_length=True,
-            return_attention_mask=True,
-            return_tensors="pt",
-        )
-        input_ids = encoded_text["input_ids"].to(device)
-        attention_mask = encoded_text["attention_mask"].to(device)
-        token_type_ids = encoded_text["token_type_ids"].to(device)
-        output = self.model_intent(input_ids, attention_mask, token_type_ids)
-        output = torch.sigmoid(output).detach().cpu()
-        output = output.flatten().round().numpy()
-
-        for idx, p in enumerate(output):
-            if p == 1:
-                return intent_labels[idx]
-        return None
+    def identify_entities(self, message):
+        return self.model_entity.predict(message)
 
     def get_response(self, intent: str, detected_entity: dict):
         if not intent:
@@ -197,18 +153,15 @@ class Chatbot:
 
         return random.choice(self.responses_template["Unknown"]["responses"])
 
-    def predict(self, text):
-        intent = self.predict_intent(text)
+    def handle_view_menu(self, message):
+        entities = self.identify_entities(message)
+        if "Pizza" in entities:
+            pass
+        pass
 
-        entity = None
-        if intent in [
-            "view_menu",
-            "view_cart",
-            "add_to_cart",
-            "remove_from_cart",
-            "modify_cart_item",
-            "provide_info",
-        ]:
-            entity = self.predict_entity(text)
-
-        return self.get_response(intent, entity)
+    def handle_message(self, message):
+        message_intent = self.identify_intent(message)
+        if not message_intent:
+            return random.choice(self.responses_template["Unknown"]["responses"])
+        elif message_intent == "view_menu":
+            return self.handle_view_menu(message)

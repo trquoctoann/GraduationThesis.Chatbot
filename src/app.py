@@ -1,8 +1,10 @@
 import os
 from typing import Final
+
+from discord import Client, Intents, Message
 from dotenv import load_dotenv
-from nlu.chatbot import Chatbot
-from discord import Intents, Client, Message
+
+from nlu.pizzatalk_chatbot import Chatbot
 
 load_dotenv()
 TOKEN: Final[str] = os.getenv("DISCORD_TOKEN")
@@ -12,7 +14,9 @@ intents.message_content = True
 client: Client = Client(intents=intents)
 
 chatbot = Chatbot(
-    "output/savedmodels/entity_v1.h5", "output/savedmodels/intent_v1.bin", "src/nlu/responses.json"
+    "output/savedmodels/entity_v1.h5",
+    "output/savedmodels/intent_v1.bin",
+    "src/nlu/responses.json",
 )
 
 
@@ -26,7 +30,11 @@ async def send_message(message: Message, user_message: str) -> None:
 
     try:
         response: str = chatbot.predict(user_message)
-        (await message.author.send(response) if is_private else await message.channel.send(response))
+        (
+            await message.author.send(response)
+            if is_private
+            else await message.channel.send(response)
+        )
     except Exception as e:
         print(e)
 
