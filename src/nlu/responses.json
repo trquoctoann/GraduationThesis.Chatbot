@@ -1,32 +1,26 @@
 {
     "view_menu": {
-        "Unknown": {
-            "responses": [
-                "Xin chào, rất vui được phục vụ bạn! Dưới đây là menu của tiệm chúng mình, mời bạn lựa chọn: ",
-                "Dưới đây là toàn bộ menu của nhà hàng chúng mình. Bạn muốn thưởng thức món nào hôm nay nhỉ?",
-                "Mời bạn tham khảo menu của cừa hàng nhé: ",
-                "Menu của của tiệm chúng mình đây, bạn có thể tham khảo nhé: ",
-                "Bạn có thể tìm món ở menu dưới đây và nhắn cho mình để đặt hàng nhé: "
-            ]
-        },
-        "Pizza": {
-            "responses": [
-                "Dưới đây là thông tin về sản phẩm mà bạn quan tâm: ",
-                "Mình nhận thông tin nhé, đây là sản phẩm bạn muốn tìm ạ: ",
-                "Thông tin sản phẩm bạn muốn tìm đây nhé: ",
-                "Sản phẩm này có thông tin chi tiết như sau: ",
-                "Bạn có thể tham khảo thông tin của sản phẩm ở đây nhé: "
-            ]
-        },
-        "Others": {
-            "responses": [
-                "Rất tiếc, hiện tại chúng tôi chỉ có thông tin chi tiết về các loại Pizza. Các yếu tố như kích thước, số lượng, loại vỏ bánh, và topping hiện không có sẵn thông tin cụ thể.",
-                "Hiện tại, chúng tôi không cung cấp thông tin chi tiết về số lượng, kích thước, loại vỏ bánh, và topping mà chỉ có thông tin về Pizza. Mời bạn tham khảo các loại Pizza có sẵn.",
-                "Thông tin về kích thước, số lượng, loại vỏ bánh, và topping không có trong menu của chúng tôi. Chúng tôi chỉ cung cấp thông tin đầy đủ về các loại Pizza.",
-                "Bạn đang hỏi về các chi tiết như số lượng, kích thước, loại vỏ bánh, và topping. Xin lỗi vì sự bất tiện này, nhưng menu của chúng tôi chỉ bao gồm thông tin về Pizza.",
-                "Các thông tin về kích thước, số lượng, loại vỏ bánh, và topping hiện tại không có trong menu của chúng tôi. Vui lòng xem các loại Pizza để có thông tin chi tiết hơn."
-            ]
-        }
+        "unknown": [
+            "Xin chào quý khách! Dưới đây là danh sách các loại pizza mà chúng tôi đang cung cấp:",
+            "Kính chào quý khách! Đây là danh sách các loại pizza hiện có của chúng tôi:",
+            "Xin chào quý khách! Dưới đây là các loại pizza mà chúng tôi đang cung cấp, kèm theo mô tả chi tiết:",
+            "Kính chào quý khách! Quý khách có thể tham khảo danh sách các loại pizza của chúng tôi dưới đây:",
+            "Xin chào quý khách! Đây là danh sách các loại pizza mà chúng tôi hiện có:"
+        ],
+        "Pizza_Size": [
+            "Xin chào quý khách! Dưới đây là thông tin về bánh pizza {pizza_name} size {size} mà bạn đã yêu cầu:",
+            "Kính chào quý khách! Quý khách đã chọn bánh pizza {pizza_name} size {size}. Đây là mô tả chi tiết của bánh:",
+            "Xin chào quý khách! Bánh pizza {pizza_name} size {size} có các thông tin sau:",
+            "Kính chào quý khách! Quý khách đã chọn bánh {pizza_name} size {size}. Dưới đây là thông tin chi tiết:",
+            "Xin chào quý khách! Thông tin về bánh pizza {pizza_name} size {size} như sau:"
+        ],
+        "Pizza": [
+            "Xin chào quý khách! Quý khách không chỉ định kích thước, vì vậy hệ thống đã tự động chọn size L cho bánh pizza {pizza_name}. Dưới đây là thông tin chi tiết:",
+            "Kính chào quý khách! Vì quý khách không chỉ định kích thước, hệ thống đã chọn size L cho bánh pizza {pizza_name}. Đây là mô tả chi tiết của bánh:",
+            "Xin chào quý khách! Do quý khách không chỉ định size, chúng tôi đã chọn size L cho bánh pizza {pizza_name}. Dưới đây là thông tin chi tiết:",
+            "Kính chào quý khách! Hệ thống đã chọn size L cho bánh pizza {pizza_name} do quý khách không chỉ định kích thước. Thông tin chi tiết như sau:",
+            "Xin chào quý khách! Vì quý khách không chỉ định size, hệ thống đã tự động chọn size L cho bánh pizza {pizza_name}. Thông tin về bánh như sau:"
+        ]
     },
     "view_cart": {
         "Unknown": {
@@ -241,13 +235,25 @@
             ]
         }
     },
-    "Unknown": {
-        "responses": [
-            "Mình không hiểu ý của bạn. Vui lòng diễn tả lại giúp mình nhé",
-            "Xin lỗi, mình không hiểu bạn muốn nói gì. Bạn có thể nói rõ hơn được không?",
-            "Mình không rõ ý của bạn lắm. Bạn có thể giải thích rõ hơn yêu cầu của bạn hoặc đưa ra một số chi tiết cụ thể được không?",
-            "Mình chưa rõ ý bạn lắm. Bạn có thể mô tả cụ thể hơn về yêu cầu của bạn không?",
-            "Rất tiếc, mình không hiểu bạn đang cần gì. Bạn vui lòng nói rõ hơn để mình có thể giúp đỡ?"
-        ]
-    }
+    "unknown": [
+        "Mình không hiểu ý của bạn. Vui lòng diễn tả lại giúp mình nhé",
+        "Xin lỗi, mình không hiểu bạn muốn nói gì. Bạn có thể nói rõ hơn được không?",
+        "Mình không rõ ý của bạn lắm. Bạn có thể giải thích rõ hơn yêu cầu của bạn hoặc đưa ra một số chi tiết cụ thể được không?",
+        "Mình chưa rõ ý bạn lắm. Bạn có thể mô tả cụ thể hơn về yêu cầu của bạn không?",
+        "Rất tiếc, mình không hiểu bạn đang cần gì. Bạn vui lòng nói rõ hơn để mình có thể giúp đỡ?"
+    ],
+    "wrong_name_pizza": [
+        "Rất tiếc, chúng tôi không có bánh pizza tên {pizza_name} trong menu của mình. Bạn có thể xem qua menu của chúng tôi để chọn món khác không?",
+        "Xin lỗi, bánh pizza {pizza_name} hiện không có trong hệ thống của chúng tôi. Bạn có muốn thử một loại pizza khác không?",
+        "Chúng tôi rất tiếc, nhưng bánh pizza {pizza_name} không có sẵn trong menu của chúng tôi. Vui lòng chọn một loại pizza khác từ danh sách của chúng tôi.",
+        "Bánh pizza {pizza_name} không có trong danh sách món của chúng tôi. Bạn có thể tham khảo thêm các loại pizza khác mà chúng tôi đang có không?",
+        "Rất tiếc, hiện tại chúng tôi không phục vụ bánh pizza {pizza_name}. Bạn có thể chọn một loại khác từ menu của chúng tôi không?"
+    ],
+    "wrong_size_pizza": [
+        "Rất tiếc, chúng tôi không có kích thước {size} cho pizza {pizza_name}. Bạn có thể chọn từ các kích thước khác mà chúng tôi đang có không?",
+        "Xin lỗi, kích thước {size} không có sẵn cho pizza {pizza_name}. Vui lòng chọn một kích thước khác trong menu của chúng tôi.",
+        "Chúng tôi rất tiếc, nhưng kích thước {size} không được phục vụ cho pizza {pizza_name}. Bạn có thể xem các kích thước khác mà chúng tôi đang cung cấp không?",
+        "Kích thước {size} không có trong danh sách kích thước mà chúng tôi phục vụ. Bạn có thể chọn từ các kích thước khác không?",
+        "Rất tiếc, hiện tại chúng tôi không có kích thước {size} cho pizza {pizza_name}. Bạn có thể tham khảo các kích thước khác trong menu của chúng tôi không?"
+    ]
 }

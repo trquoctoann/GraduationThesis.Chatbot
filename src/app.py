@@ -4,7 +4,7 @@ from typing import Final
 from discord import Client, Intents, Message
 from dotenv import load_dotenv
 
-from nlu.pizzatalk_chatbot import Chatbot
+from nlu.pizzatalk_chatbot import PizzaTalkChatbot
 
 load_dotenv()
 TOKEN: Final[str] = os.getenv("DISCORD_TOKEN")
@@ -13,9 +13,9 @@ intents: Intents = Intents.default()
 intents.message_content = True
 client: Client = Client(intents=intents)
 
-chatbot = Chatbot(
-    "output/savedmodels/entity_v1.h5",
-    "output/savedmodels/intent_v1.bin",
+chatbot = PizzaTalkChatbot(
+    "output/savedmodels/order_entity_v2.h5",
+    "output/savedmodels/intents_v2.bin",
     "src/nlu/responses.json",
 )
 
@@ -29,12 +29,8 @@ async def send_message(message: Message, user_message: str) -> None:
         user_message = user_message[1:]
 
     try:
-        response: str = chatbot.predict(user_message)
-        (
-            await message.author.send(response)
-            if is_private
-            else await message.channel.send(response)
-        )
+        response: str = chatbot.handle_message(user_message)
+        (await message.author.send(response) if is_private else await message.channel.send(response))
     except Exception as e:
         print(e)
 

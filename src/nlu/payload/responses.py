@@ -2,12 +2,23 @@ import json
 
 
 class ResponsePayloadStockItem:
-    def __init__(self, id: int, name: str, unit: str, total_quantity: int, selling_price: float):
+    def __init__(
+        self,
+        id: int,
+        name: str,
+        unit: str,
+        total_quantity: int,
+        selling_price: float,
+        store_id: int,
+        product_id: int,
+    ):
         self.id = id
         self.name = name
         self.unit = unit
         self.total_quantity = total_quantity
         self.selling_price = selling_price
+        self.store_id = store_id
+        self.product_id = product_id
 
     def to_json(self):
         return json.dumps(
@@ -17,6 +28,8 @@ class ResponsePayloadStockItem:
                 "unit": self.unit,
                 "total_quantity": self.total_quantity,
                 "sellingPrice": self.selling_price,
+                "storeId": self.store_id,
+                "productId": self.product_id,
             },
             ensure_ascii=False,
         )
@@ -29,6 +42,8 @@ class ResponsePayloadStockItem:
             unit=data["unit"] if data["unit"] else None,
             total_quantity=data["totalQuantity"] if data["totalQuantity"] else None,
             selling_price=data["sellingPrice"] if data["sellingPrice"] else None,
+            store_id=data["storeId"] if data["storeId"] else None,
+            product_id=data["productId"] if data["productId"] else None,
         )
 
 
