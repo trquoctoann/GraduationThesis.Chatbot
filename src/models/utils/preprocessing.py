@@ -3,19 +3,19 @@ import re
 import unicodedata
 
 
-def read_tokenize_dictionary(dictionary_path="models/utils/tokenize_dictionary.json"):
+def read_tokenize_dictionary(dictionary_path="src/models/utils/tokenize_dictionary.json"):
     with open(dictionary_path, "r", encoding="utf-8") as file:
         tokenize_dictionary = json.load(file)
     return tokenize_dictionary
 
 
-def read_stop_word_dictionary(dictionary_path="models/utils/vietnamese-stopwords.txt"):
+def read_stop_word_dictionary(dictionary_path="src/models/utils/vietnamese-stopwords.txt"):
     with open(dictionary_path, "r", encoding="utf-8") as file:
         stopwords_dictionary = file.read()
     return set(stopwords_dictionary.split("\n"))
 
 
-def read_acronym_dictionary(dictionary_path="models/utils/acronym_dictionary.json"):
+def read_acronym_dictionary(dictionary_path="src/models/utils/acronym_dictionary.json"):
     with open(dictionary_path, "r", encoding="utf-8") as file:
         acronym_dictionary = json.load(file)
     return acronym_dictionary
@@ -27,17 +27,13 @@ def lowercase_text(text: str):
 
 def remove_diacritic(text: str):
     nfkd_form = unicodedata.normalize("NFKD", text)
-    return "".join([c for c in nfkd_form if not unicodedata.combining(c)]).replace(
-        "đ", "d"
-    )
+    return "".join([c for c in nfkd_form if not unicodedata.combining(c)]).replace("đ", "d")
 
 
 def replace_tokens(text: str, replacement_dictionary: dict):
     pattern = r"(?<=\d)/(?=\d)"
     text = re.sub(pattern, " kiệt ", text)
-    sorted_items = sorted(
-        replacement_dictionary.items(), key=lambda x: len(x[0]), reverse=True
-    )
+    sorted_items = sorted(replacement_dictionary.items(), key=lambda x: len(x[0]), reverse=True)
     for original, token in sorted_items:
         pattern = re.compile(r"\b" + re.escape(original) + r"\b", re.IGNORECASE)
         text = pattern.sub(token, text)
@@ -73,17 +69,14 @@ def translate_sentences(text: str, dictionary: dict):
                     break
 
             if not skip:
-                list_token_tokenized_text[start_of_word:end_of_word] = [
-                    no_diacritic_token
-                ]
+                list_token_tokenized_text[start_of_word:end_of_word] = [no_diacritic_token]
 
     return " ".join([token for token in list_token_tokenized_text])
 
 
 def remove_stopwords(text: str, stopwords_dictionary: set):
     stopwords_regex = "|".join(
-        re.escape(stopword)
-        for stopword in sorted(stopwords_dictionary, key=len, reverse=True)
+        re.escape(stopword) for stopword in sorted(stopwords_dictionary, key=len, reverse=True)
     )
     text = re.sub(r"\b(?:" + stopwords_regex + r")(?:\W|$)", " ", text)
     text = text.strip()

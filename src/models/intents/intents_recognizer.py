@@ -1,7 +1,10 @@
 import torch
 import torch.nn as nn
+import numpy as np
 from transformers import AutoModel, AutoTokenizer
+from models.utils.preprocessing import preprocessing
 
+THRESHOLD = 0.99
 MAX_LEN = 128
 device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 
@@ -23,19 +26,16 @@ class IntentsRecognizer(nn.Module):
             "cancel_order",
             "provide_info",
         ]
-        self.intent_tokenizer = AutoTokenizer.from_pretrained(
-            "vinai/phobert-base", use_fast=False
-        )
+        self.intent_tokenizer = AutoTokenizer.from_pretrained("vinai/phobert-base", use_fast=False)
 
     def forward(self, input_ids, attn_mask, token_type_ids):
-        output = self.phobert(
-            input_ids, attention_mask=attn_mask, token_type_ids=token_type_ids
-        )
+        output = self.phobert(input_ids, attention_mask=attn_mask, token_type_ids=token_type_ids)
         output_dropout = self.dropout(output.pooler_output)
         output = self.linear(output_dropout)
         return output
 
     def predict(self, text):
+        text = preprocessing(text, False)
         encoded_text = self.intent_tokenizer.encode_plus(
             text,
             max_length=MAX_LEN,
@@ -48,10 +48,13 @@ class IntentsRecognizer(nn.Module):
         input_ids = encoded_text["input_ids"].to(device)
         attention_mask = encoded_text["attention_mask"].to(device)
         token_type_ids = encoded_text["token_type_ids"].to(device)
-        output = self.model_intent(input_ids, attention_mask, token_type_ids)
-        output = torch.sigmoid(output).detach().cpu()
-        output = output.flatten().round().numpy()
-        for idx, p in enumerate(output):
-            if p == 1:
-                return self.intent_labels[idx]
-        return None
+        output = self(input_ids, attention_mask, token_type_ids)
+        probabilities = torch.softmax(output, dim=-1).detach().cpu().numpy().flatten()
+
+        max_prob = np.max(probabilities)
+        max_prob_index = np.argmax(probabilities)
+
+        if max_prob >= THRESHOLD:
+            return self.intent_labels[max_prob_index]
+        else:
+            return None
