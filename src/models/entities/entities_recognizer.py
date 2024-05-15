@@ -4,17 +4,7 @@ from joblib import load
 
 from models.utils.preprocessing import preprocessing
 
-order_labels = [
-    "B-Quantity",
-    "B-Pizza",
-    "I-Pizza",
-    "B-Topping",
-    "B-Size",
-    "I-Size",
-    "O",
-    "B-Crust",
-    "I-Crust",
-]
+order_labels = ["Quantity", "Pizza", "Topping", "Size", "Crust", "O"]
 customer_info_labels = [
     "B-Cus",
     "I-Cus",
@@ -31,6 +21,7 @@ class EntitiesRecognizer:
     def __init__(self, model_path: str, is_order: bool):
         self.model = self._load_model(model_path)
         self.labels = order_labels if is_order else customer_info_labels
+        self.is_order = is_order
 
     def _load_model(self, model_path):
         return load(model_path)
@@ -96,9 +87,23 @@ class EntitiesRecognizer:
             "words": words,
             "label": labels,
         }
-        return self.aggregate_entities(result)
+        if self.is_order:
+            return self.reformat_order_result(result)
+        return self.reformat_customer_result(result)
 
-    def aggregate_entities(self, predicted_result):
+    def reformat_order_result(self, predicted_result):
+        output_dict = {}
+        for index, (word, label) in enumerate(
+            zip(predicted_result["words"], predicted_result["label"])
+        ):
+            if label == "O":
+                continue
+            if label not in output_dict:
+                output_dict[label] = []
+            output_dict[label].append((word, index))
+        return output_dict
+
+    def reformat_customer_result(self, predicted_result):
         aggregated_entities = {}
         current_entity = None
         current_label = None
@@ -107,18 +112,26 @@ class EntitiesRecognizer:
             if label.startswith("B-"):
                 if current_entity is not None and current_label is not None:
                     if current_label in aggregated_entities:
-                        aggregated_entities[current_label].append(" ".join(current_entity))
+                        aggregated_entities[current_label].append(
+                            " ".join(current_entity)
+                        )
                     else:
                         aggregated_entities[current_label] = [" ".join(current_entity)]
 
                 current_entity = [word]
                 current_label = label[2:]
-            elif label.startswith("I-") and current_entity is not None and label[2:] == current_label:
+            elif (
+                label.startswith("I-")
+                and current_entity is not None
+                and label[2:] == current_label
+            ):
                 current_entity.append(word)
             else:
                 if current_entity is not None and current_label is not None:
                     if current_label in aggregated_entities:
-                        aggregated_entities[current_label].append(" ".join(current_entity))
+                        aggregated_entities[current_label].append(
+                            " ".join(current_entity)
+                        )
                     else:
                         aggregated_entities[current_label] = [" ".join(current_entity)]
                     current_entity = None
@@ -126,7 +139,9 @@ class EntitiesRecognizer:
                 if label == "O":
                     continue
                 else:
-                    aggregated_entities[label] = aggregated_entities.get(label, []) + [word]
+                    aggregated_entities[label] = aggregated_entities.get(label, []) + [
+                        word
+                    ]
 
         if current_entity is not None and current_label is not None:
             if current_label in aggregated_entities:
