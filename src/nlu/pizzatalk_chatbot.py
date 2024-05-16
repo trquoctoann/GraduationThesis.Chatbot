@@ -146,7 +146,7 @@ class PizzaTalkChatbot:
         else:
             return {"error": "Hệ thống xảy ra lỗi khi tải thông tin pizza."}
 
-    def get_full_menu_pizza(self) -> dict:
+    def get_full_menu_pizza(self) -> list[ResponsePayloadProduct]:
         response = requests.get("http://localhost:8082/api/products/all?categoryId.equals=1")
         if response.status_code == 200 and response.json():
             return [
@@ -155,12 +155,21 @@ class PizzaTalkChatbot:
         else:
             return {"error": "Hệ thống xảy ra lỗi khi tải thông tin pizza."}
 
-    def get_active_cart(self) -> dict:
+    def get_active_cart(self, user_id: int) -> ResponsePayloadCart:
         response = requests.get(
-            "http://localhost:8082/api/carts/all?userId.equals=1&status.equals=ACTIVE"
+            f"http://localhost:8082/api/carts/all?userId.equals={str(user_id)}&status.equals=ACTIVE"
         )
         if response.status_code == 200 and response.json():
             return ResponsePayloadCart.from_json(response.json()[0])
+        else:
+            return {"error": "Hệ thống xảy ra lỗi khi tải thông tin giỏ hàng."}
+
+    def get_full_topping(self, size: str) -> list[ResponsePayloadOptionDetail]:
+        response = requests.get(
+            f"http://localhost:8082/api/option-details/all?optionId.equals=2&size.equals={size}"
+        )
+        if response.status_code == 200 and response.json():
+            return [ResponsePayloadOptionDetail.from_json(topping) for topping in response.json()]
         else:
             return {"error": "Hệ thống xảy ra lỗi khi tải thông tin giỏ hàng."}
 
@@ -171,6 +180,18 @@ class PizzaTalkChatbot:
             "Số lượng còn lại": pizza_info["quantity"],
             "Các loại đế bánh": pizza_info["crust"],
             "Topping có thể thêm": pizza_info["toppings"],
+        }
+        details_response = "\n".join([f"{key}: {value}" for key, value in details.items()])
+        return details_response
+
+    def format_cart_item_response(self, cart_item_info: str) -> str:
+        details = {
+            "Tên món": cart_item_info,
+            "Số lượng": cart_item_info["quantity"],
+            "Size": cart_item_info["size"],
+            "Đế bánh": cart_item_info["crust"],
+            "Topping": cart_item_info["toppings"],
+            "Giá cả": str(cart_item_info["price"]) + " ₫",
         }
         details_response = "\n".join([f"{key}: {value}" for key, value in details.items()])
         return details_response
@@ -217,8 +238,40 @@ class PizzaTalkChatbot:
         entities = self.identify_order_entities(message)
         pass
 
-    def handle_add_to_cart(self, message):
-        pass
+    def _process_single_pizza(self, entities: dict) -> dict:
+        cart_item = {"Pizza": entities["Pizza"][0][0]}
+
+        # need check number of entity
+        if "Quantity" in entities:
+            cart_item["Quantity"] = entities["Quantity"][0][0]
+        if "Size" in entities:
+            cart_item["Size"] = [size[0] for size in entities["Size"]]
+        if "Quantity" in entities:
+            cart_item["Quantity"] = [quantity[0] for quantity in entities["Quantity"]]
+        if "Topping" in entities:
+            cart_item["Topping"] = [topping[0] for topping in entities["Topping"]]
+
+        return cart_item
+
+    def _build_cart_items_detail(self, message: str) -> list:
+        entities = self.identify_order_entities(message)
+        number_of_pizza_types = len(entities["Pizza"])
+        number_of_quantity = len(entities["Quantity"])
+        if number_of_pizza_types == 1 and number_of_quantity == 1 and entities["Quantity"][0][0] == 1:
+            return [self._process_single_pizza(entities)]
+        elif number_of_pizza_types == 1:
+            pass
+        return []
+    
+    def get_topping_ids(self, list_topping)
+
+
+    def handle_add_to_cart(self, message: str) -> str:
+        cart = self.get_active_cart(1)
+        cart_items = self._build_cart_items_detail(message)
+        for cart_item in cart_items:
+            cart_item_dto = RequestPayloadCartItem(quantity=cart_item["Quantity"], cart_id=cart.id, product_id=cart_item[""])
+
 
     def handle_remove_from_cart(self, message):
         entities = self.identify_order_entities(message)

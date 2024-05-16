@@ -93,9 +93,7 @@ class EntitiesRecognizer:
 
     def reformat_order_result(self, predicted_result):
         output_dict = {}
-        for index, (word, label) in enumerate(
-            zip(predicted_result["words"], predicted_result["label"])
-        ):
+        for index, (word, label) in enumerate(zip(predicted_result["words"], predicted_result["label"])):
             if label == "O":
                 continue
             if label not in output_dict:
@@ -112,26 +110,18 @@ class EntitiesRecognizer:
             if label.startswith("B-"):
                 if current_entity is not None and current_label is not None:
                     if current_label in aggregated_entities:
-                        aggregated_entities[current_label].append(
-                            " ".join(current_entity)
-                        )
+                        aggregated_entities[current_label].append(" ".join(current_entity))
                     else:
                         aggregated_entities[current_label] = [" ".join(current_entity)]
 
                 current_entity = [word]
                 current_label = label[2:]
-            elif (
-                label.startswith("I-")
-                and current_entity is not None
-                and label[2:] == current_label
-            ):
+            elif label.startswith("I-") and current_entity is not None and label[2:] == current_label:
                 current_entity.append(word)
             else:
                 if current_entity is not None and current_label is not None:
                     if current_label in aggregated_entities:
-                        aggregated_entities[current_label].append(
-                            " ".join(current_entity)
-                        )
+                        aggregated_entities[current_label].append(" ".join(current_entity))
                     else:
                         aggregated_entities[current_label] = [" ".join(current_entity)]
                     current_entity = None
@@ -139,9 +129,7 @@ class EntitiesRecognizer:
                 if label == "O":
                     continue
                 else:
-                    aggregated_entities[label] = aggregated_entities.get(label, []) + [
-                        word
-                    ]
+                    aggregated_entities[label] = aggregated_entities.get(label, []) + [word]
 
         if current_entity is not None and current_label is not None:
             if current_label in aggregated_entities:
