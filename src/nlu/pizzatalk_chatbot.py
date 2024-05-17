@@ -1,12 +1,13 @@
+import difflib
 import json
 import random
 
 import requests
 import torch
 
-from models.utils.preprocessing import preprocessing
 from models.entities.entities_recognizer import EntitiesRecognizer
 from models.intents.intents_recognizer import IntentsRecognizer
+from models.utils.preprocessing import preprocessing
 from nlu.payload.requests import RequestPayloadCartItem
 from nlu.payload.responses import (
     ResponsePayloadCart,
@@ -16,6 +17,7 @@ from nlu.payload.responses import (
     ResponsePayloadProduct,
     ResponsePayloadStockItem,
 )
+from utils.api_url import APIUrls
 from utils.correct_entity_name import (
     get_correct_crust_type,
     get_correct_pizza_name,
@@ -55,176 +57,179 @@ class PizzaTalkChatbot:
     def identify_intent(self, message: str) -> dict:
         return self.model_intent.predict(preprocessing(message))
 
-    def identify_order_entities(self, message: str) -> str:
+    def identify_order_entities(self, message: str) -> dict:
         return self.model_order_entity.predict(preprocessing(message, True))
 
     def identify_customer_entities(self, message: str) -> str:
         return self.model_customer_entity.predict(preprocessing(message, True))
 
-    #     if intent == "add_to_cart":
-    #         try:
-    #             verify_product_name(detected_entity)
-    #         except InvalidProductName as e:
-    #             if e.message == "Invalid pizza":
-    #                 return "Xin lỗi. Cửa hàng chúng mình không có pizza " + e.product_name + " ạ"
-    #             elif e.message == "Invalid size":
-    #                 return "Xin lỗi. Cửa hàng chúng mình chỉ phục vụ pizza cỡ S, X, XL thôi ạ"
-    #             elif e.message == "Invalid crust":
-    #                 return "Xin lỗi. Cửa hàng chúng mình chỉ phục vụ pizza có đế mỏng hoặc dày thôi ạ"
-
-    #         missing_entities = [
-    #             key
-    #             for key in ["Pizza", "Quantity", "Size", "Crust", "Topping"]
-    #             if key not in detected_entity
-    #         ]
-    #         if not missing_entities:
-    #             response = (
-    #                 random.choice(self.responses_template[intent]["All"]["responses"])
-    #                 .format(**{k: v for k, v in detected_entity.items()})
-    #                 .replace("[pizza]", standardize_result(detected_entity["Pizza"][0]))
-    #                 .replace("[quantity]", standardize_result(detected_entity["Quantity"][0]))
-    #                 .replace("[size]", standardize_result(detected_entity["Size"][0]))
-    #                 .replace("[crust]", standardize_result(detected_entity["Crust"][0]))
-    #                 .replace(
-    #                     "[topping]",
-    #                     standardize_result(", ".join(detected_entity["Topping"])),
-    #                 )
-    #                 .title()
-    #             )
-
-    #         else:
-    #             missing_details = ", ".join(
-    #                 [
-    #                     random.choice(
-    #                         self.responses_template[intent][f"missing_{entity.lower()}"]["responses"]
-    #                     )
-    #                     for entity in missing_entities
-    #                 ]
-    #             )
-    #             template = random.choice(
-    #                 self.responses_template[intent]["missing_template"]["responses"]
-    #             )
-    #             response = template.replace("[missing_entity]", missing_details)
-    #         return response
-
-    #     if intent == "remove_from_cart":
-    #         if "Pizza" in detected_entity and "Quantity" in detected_entity:
-    #             return (
-    #                 random.choice(self.responses_template[intent]["Pizza_Quantity"]["responses"])
-    #                 .replace("[pizza]", standardize_result(detected_entity["Pizza"][0]))
-    #                 .replace("[quantity]", standardize_result(detected_entity["Quantity"][0]))
-    #             )
-    #         elif "Pizza" in detected_entity:
-    #             return random.choice(self.responses_template[intent]["Pizza"]["responses"]).replace(
-    #                 "[pizza]", standardize_result(detected_entity["Pizza"][0])
-    #             )
-
-    def get_specified_pizza(self, pizza_name: str, size: str = None) -> dict:
-        request_url = f"http://localhost:8082/api/products/all?categoryId.equals=1&name.contains=pizza {pizza_name}"
+    def get_specified_pizza(
+        self, pizza_name: str, size: str = None
+    ) -> ResponsePayloadProduct:
+        request_url = (
+            APIUrls.PRODUCT_SERVICE.value + f"&name.contains=pizza {pizza_name}"
+        )
         if size:
             request_url += "&size.equals=" + size.upper()
         response = requests.get(request_url)
 
         if response.status_code == 200 and response.json():
-            pizza_info = ResponsePayloadProduct.from_json(response.json()[0])
-            price, quantity = 0, 0
-            for stock_item in pizza_info.stock_items:
-                if stock_item.store_id == 1 and stock_item.product_id == pizza_info.id:
-                    price, quantity = stock_item.selling_price, stock_item.total_quantity
-                    break
-            return {
-                "name": pizza_info.name.lower().title(),
-                "description": pizza_info.description,
-                "size": size,
-                "crust": ", ".join([od.name for od in pizza_info.option_details if od.option_id == 1]),
-                "toppings": ", ".join(
-                    [od.name for od in pizza_info.option_details if od.option_id == 2]
-                ),
-                "price": price,
-                "quantity": quantity,
-            }
-        else:
-            return {"error": "Hệ thống xảy ra lỗi khi tải thông tin pizza."}
+            return ResponsePayloadProduct.from_json(response.json()[0])
+        return None
 
     def get_full_menu_pizza(self) -> list[ResponsePayloadProduct]:
-        response = requests.get("http://localhost:8082/api/products/all?categoryId.equals=1")
+        response = requests.get(APIUrls.PRODUCT_SERVICE.value)
         if response.status_code == 200 and response.json():
             return [
-                ResponsePayloadProduct.from_json(pizza) for pizza in response.json() if not pizza["size"]
+                ResponsePayloadProduct.from_json(pizza)
+                for pizza in response.json()
+                if not pizza["size"]
             ]
-        else:
-            return {"error": "Hệ thống xảy ra lỗi khi tải thông tin pizza."}
+        return []
 
     def get_active_cart(self, user_id: int) -> ResponsePayloadCart:
         response = requests.get(
-            f"http://localhost:8082/api/carts/all?userId.equals={str(user_id)}&status.equals=ACTIVE"
+            APIUrls.CART_SERVICE.value
+            + f"?userId.equals={str(user_id)}&status.equals=ACTIVE"
         )
         if response.status_code == 200 and response.json():
             return ResponsePayloadCart.from_json(response.json()[0])
-        else:
-            return {"error": "Hệ thống xảy ra lỗi khi tải thông tin giỏ hàng."}
+        return None
 
     def get_full_topping(self, size: str) -> list[ResponsePayloadOptionDetail]:
         response = requests.get(
-            f"http://localhost:8082/api/option-details/all?optionId.equals=2&size.equals={size}"
+            APIUrls.OPTION_DETAIL_SERVICE.value
+            + f"?optionId.equals=2&size.equals={size}"
         )
         if response.status_code == 200 and response.json():
-            return [ResponsePayloadOptionDetail.from_json(topping) for topping in response.json()]
-        else:
-            return {"error": "Hệ thống xảy ra lỗi khi tải thông tin giỏ hàng."}
+            return [
+                ResponsePayloadOptionDetail.from_json(topping)
+                for topping in response.json()
+            ]
+        return []
 
-    def format_pizza_response(self, pizza_info: dict) -> str:
+    def get_all_cart_items(self, cart_id: int) -> list[ResponsePayloadCartItem]:
+        response = requests.get(
+            APIUrls.CART_ITEM_SERVICE.value + f"/all?cartId.equals={cart_id}"
+        )
+        if response.status_code == 200 and response.json():
+            return [
+                ResponsePayloadCartItem.from_json(cart_item)
+                for cart_item in response.json()
+            ]
+        return None
+
+    def throw_request_error(self, endpoint_name: str) -> dict:
+        return {"error": f"Hệ thống xảy ra lỗi khi tải thông tin {endpoint_name}"}
+
+    def format_pizza_response(self, pizza_info: ResponsePayloadProduct) -> str:
+        price, quantity = 0, 0
+        for stock_item in pizza_info.stock_items:
+            if stock_item.store_id == 1 and stock_item.product_id == pizza_info.id:
+                price, quantity = stock_item.selling_price, stock_item.total_quantity
+                break
         details = {
-            "Mô tả": pizza_info["description"],
-            "Giá cả": str(pizza_info["price"]) + " ₫",
-            "Số lượng còn lại": pizza_info["quantity"],
-            "Các loại đế bánh": pizza_info["crust"],
-            "Topping có thể thêm": pizza_info["toppings"],
+            "Mô tả": pizza_info.description,
+            "Giá cả": str(price) + " ₫",
+            "Số lượng còn lại": quantity,
+            "Các loại đế bánh": ", ".join(
+                [od.name for od in pizza_info.option_details if od.option_id == 1]
+            ),
+            "Topping có thể thêm": ", ".join(
+                [od.name for od in pizza_info.option_details if od.option_id == 2]
+            ),
         }
-        details_response = "\n".join([f"{key}: {value}" for key, value in details.items()])
+        details_response = "\n".join(
+            [f"{key}: {value}" for key, value in details.items()]
+        )
         return details_response
 
-    def format_cart_item_response(self, cart_item_info: str) -> str:
+    def format_cart_item_response(self, cart_item_info: ResponsePayloadCartItem) -> str:
         details = {
-            "Tên món": cart_item_info,
-            "Số lượng": cart_item_info["quantity"],
-            "Size": cart_item_info["size"],
-            "Đế bánh": cart_item_info["crust"],
-            "Topping": cart_item_info["toppings"],
-            "Giá cả": str(cart_item_info["price"]) + " ₫",
+            "Tên món": cart_item_info.product.name.lower().title(),
+            "Số lượng": cart_item_info.quantity,
+            "Size": cart_item_info.product.size,
+            "Đế bánh": ", ".join(
+                [od.name for od in cart_item_info.option_details if od.option_id == 1]
+            ),
+            "Topping": ", ".join(
+                [od.name for od in cart_item_info.option_details if od.option_id == 2]
+            ),
+            "Giá cả": str(cart_item_info.price) + " ₫",
         }
-        details_response = "\n".join([f"{key}: {value}" for key, value in details.items()])
+        details_response = "\n".join(
+            [f"{key}: {value}" for key, value in details.items()]
+        )
         return details_response
+
+    def announce_invalid_pizza(self, list_invalid_pizza: list):
+        return random.choice(self.responses_template["wrong_name_pizza"]).format(
+            pizza_name=", ".join(list_invalid_pizza)
+        )
+
+    def annouce_invalid_option(
+        self, pizza: str, option_type: str, list_invalid_option: list
+    ):
+        if option_type == "size":
+            return random.choice(self.responses_template["wrong_size_pizza"]).format(
+                pizza_name=pizza, size=", ".join(list_invalid_option)
+            )
+        elif option_type == "crust":
+            return random.choice(self.responses_template["wrong_crust_pizza"]).format(
+                pizza_name=pizza, size=", ".join(list_invalid_option)
+            )
+        elif option_type == "topping":
+            return random.choice(self.responses_template["wrong_topping_pizza"]).format(
+                pizza_name=pizza, size=", ".join(list_invalid_option)
+            )
+
+    def clean_recognized_entities(self, entities: dict) -> dict:
+        for key, value in entities.items():
+            entities[key] = [name[0] for name in value]
+
+        if "Pizza" in entities:
+            correct_pizzas, wrong_pizzas = get_correct_pizza_name(entities["Pizza"])
+            if wrong_pizzas:
+                return self.announce_invalid_pizza(wrong_pizzas)
+            entities["Pizza"] = correct_pizzas
+
+        if "Size" in entities:
+            entities["Size"] = get_correct_size(entities["Size"])[0]
+
+        if "Quantity" in entities:
+            entities["Quantity"] = get_quantity_in_number(entities["Quantity"])
+
+        if "Topping" in entities:
+            entities["Topping"] = get_correct_topping_name(entities["Topping"])[0]
+
+        if "Crust" in entities:
+            entities["Crust"] = get_correct_crust_type(entities["Crust"])[0]
+
+        return entities
 
     def handle_view_menu(self, message: str) -> str:
         entities = self.identify_order_entities(message)
+        cleaned_entities = self.clean_recognized_entities(entities)
+
         if "Pizza" in entities:
-            pizzas = entities["Pizza"]
-            correct_pizzas, wrong_pizzas = get_correct_pizza_name(pizzas)
-            if wrong_pizzas:
-                return random.choice(self.responses_template["wrong_name_pizza"]).format(
-                    pizza_name=", ".join(wrong_pizzas)
-                )
+            pizza = cleaned_entities["Pizza"][0]
+            size = cleaned_entities["Size"][0] if "Size" in entities else "l"
 
-            size = entities["Size"][0] if "Size" in entities else "l"
-            correct_sizes, wrong_sizes = get_correct_size([size])
-            if wrong_sizes:
-                return random.choice(self.responses_template["wrong_size_pizza"]).format(
-                    pizza_name=correct_pizzas[0], size=", ".join(wrong_sizes)
-                )
-
-            pizza_info = self.get_specified_pizza(correct_pizzas[0], correct_sizes[0])
-            if "error" in pizza_info:
-                return pizza_info["error"]
+            pizza_info = self.get_specified_pizza(pizza, size)
+            if not pizza_info:
+                return self.throw_request_error("pizza")["error"]
 
             response = random.choice(
-                self.responses_template["view_menu"]["Pizza_Size" if "Size" in entities else "Pizza"]
-            ).format(pizza_name=pizza_info["name"], size=pizza_info["size"])
+                self.responses_template["view_menu"][
+                    "Pizza_Size" if "Size" in cleaned_entities else "Pizza"
+                ]
+            ).format(pizza_name=pizza_info.name.lower().title(), size=pizza_info.size)
             return f"{response}\n{self.format_pizza_response(pizza_info)}"
         else:
             full_menu_pizza = self.get_full_menu_pizza()
-            if "error" in full_menu_pizza:
-                return full_menu_pizza["error"]
+            if not full_menu_pizza:
+                return self.throw_request_error("pizza")["error"]
+
             response = random.choice(self.responses_template["view_menu"]["unknown"])
             menu_details = "\n".join(
                 [
@@ -236,42 +241,98 @@ class PizzaTalkChatbot:
 
     def handle_view_cart(self, message):
         entities = self.identify_order_entities(message)
-        pass
+        cleaned_entities = self.clean_recognized_entities(entities)
+
+        cart_info = self.get_active_cart(user_id=1)
+        cart_items = self.get_all_cart_items(cart_id=cart_info.id)
+        if "Pizza" in entities:
+            pizzas = entities["Pizza"]
+
+            for cart_item in cart_items:
+                if (
+                    cart_item.product.name.lower().replace("pizza ", "")
+                    == pizzas[0].strip()
+                ):
+                    response = random.choice(
+                        self.responses_template["view_cart"]["Pizza"]["exist"]
+                    ).format(pizza_name=pizzas[0])
+                    return f"{response}\n{self.format_cart_item_response(cart_item)}"
+
+            return random.choice(
+                self.responses_template["view_cart"]["Pizza"]["nonexist"]
+            ).format(pizza_name=pizzas[0])
+        else:
+            response = random.choice(self.responses_template["view_cart"]["unknown"])
+            cart_details = "\n".join(
+                [
+                    f" - {cart_item.quantity} {cart_item.product.name.lower().title()}"
+                    for cart_item in cart_items
+                ]
+            )
+            return f"{response}\n{cart_details}"
 
     def _process_single_pizza(self, entities: dict) -> dict:
-        cart_item = {"Pizza": entities["Pizza"][0][0]}
+        cart_item = {"Pizza": entities["Pizza"][0]}
 
-        # need check number of entity
         if "Quantity" in entities:
-            cart_item["Quantity"] = entities["Quantity"][0][0]
+            cart_item["Quantity"] = int(entities["Quantity"][0])
         if "Size" in entities:
-            cart_item["Size"] = [size[0] for size in entities["Size"]]
-        if "Quantity" in entities:
-            cart_item["Quantity"] = [quantity[0] for quantity in entities["Quantity"]]
+            cart_item["Size"] = [size for size in entities["Size"]]
         if "Topping" in entities:
-            cart_item["Topping"] = [topping[0] for topping in entities["Topping"]]
+            cart_item["Topping"] = [topping for topping in entities["Topping"]]
 
         return cart_item
 
     def _build_cart_items_detail(self, message: str) -> list:
         entities = self.identify_order_entities(message)
-        number_of_pizza_types = len(entities["Pizza"])
-        number_of_quantity = len(entities["Quantity"])
-        if number_of_pizza_types == 1 and number_of_quantity == 1 and entities["Quantity"][0][0] == 1:
-            return [self._process_single_pizza(entities)]
+        cleaned_entities = self.clean_recognized_entities(entities)
+        number_of_pizza_types = len(cleaned_entities["Pizza"])
+        number_of_quantity = len(cleaned_entities["Quantity"])
+        if (
+            number_of_pizza_types == 1
+            and number_of_quantity == 1
+            and cleaned_entities["Quantity"][0] == 1
+        ):
+            return [self._process_single_pizza(cleaned_entities)]
         elif number_of_pizza_types == 1:
             pass
         return []
-    
-    def get_topping_ids(self, list_topping)
 
+    def get_topping_ids(
+        self, pizza_info: ResponsePayloadProduct, toppings_list: list
+    ) -> list:
+        topping_ids = []
+        for option_detail in pizza_info.option_details:
+            if (
+                option_detail.option_id == 2
+                and option_detail.name.lower() in toppings_list
+            ):
+                topping_ids.append(option_detail.id)
+        return topping_ids
+
+    def post_cart_item(self, cart_item: RequestPayloadCartItem) -> None:
+        response = requests.post(
+            APIUrls.CART_ITEM_SERVICE.value, json=cart_item.to_dict()
+        )
 
     def handle_add_to_cart(self, message: str) -> str:
         cart = self.get_active_cart(1)
         cart_items = self._build_cart_items_detail(message)
         for cart_item in cart_items:
-            cart_item_dto = RequestPayloadCartItem(quantity=cart_item["Quantity"], cart_id=cart.id, product_id=cart_item[""])
-
+            pizza_info = self.get_specified_pizza(
+                cart_item["Pizza"], cart_item["Size"][0]
+            )
+            cart_item_dto = RequestPayloadCartItem(
+                id=None,
+                price=100000,
+                quantity=cart_item.get("Quantity", 1),
+                cart_id=cart.id,
+                product_id=pizza_info.id,
+                option_detail_ids=self.get_topping_ids(
+                    pizza_info, cart_item.get("Topping", [])
+                ),
+            )
+            self.post_cart_item(cart_item_dto)
 
     def handle_remove_from_cart(self, message):
         entities = self.identify_order_entities(message)

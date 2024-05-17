@@ -39,7 +39,9 @@ def get_correct_pizza_name(ordered_pizzas: list):
 
     for ordered_pizza in ordered_pizzas:
         cleaned_pizza = filter_pizza_name(ordered_pizza)
-        best_match = process.extractOne(cleaned_pizza, correct_pizza_names, scorer=fuzz.ratio)
+        best_match = process.extractOne(
+            cleaned_pizza, correct_pizza_names, scorer=fuzz.ratio
+        )
         if best_match[1] < 50:
             errors.append(best_match[0])
         else:
@@ -219,7 +221,10 @@ def get_correct_topping_name(specified_toppings: list):
     valid_results = []
     errors = []
     for specified_topping in specified_toppings:
-        best_match = process.extractOne(specified_topping, correct_topping_names, scorer=fuzz.ratio)
+        specified_topping = specified_topping.replace("_", " ")
+        best_match = process.extractOne(
+            specified_topping, correct_topping_names, scorer=fuzz.ratio
+        )
         if best_match[1] < 50:
             errors.append(best_match[0])
         else:
