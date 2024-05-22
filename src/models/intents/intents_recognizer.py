@@ -1,10 +1,11 @@
+import numpy as np
 import torch
 import torch.nn as nn
-import numpy as np
 from transformers import AutoModel, AutoTokenizer
+
 from models.utils.preprocessing import preprocessing
 
-THRESHOLD = 0.99
+THRESHOLD = 0.996
 MAX_LEN = 128
 device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 

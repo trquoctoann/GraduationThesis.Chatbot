@@ -1,7 +1,8 @@
-from nlu.pizzatalk_chatbot import PizzaTalkChatbot
+from nlu.chatbot import Chatbot
 
-chatbot = PizzaTalkChatbot(
-    "output/savedmodels/order_entity_v3_1.h5",
+chatbot = Chatbot(
+    "output/savedmodels/order_entity_v4.h5",
+    "output/savedmodels/customer_info_entity_v1.h5",
     "output/savedmodels/intents_v2.bin",
     "src/nlu/responses.json",
 )
@@ -9,4 +10,5 @@ chatbot = PizzaTalkChatbot(
 print("model up")
 while True:
     user_message = input()
-    print(chatbot.handle_message(user_message))
+    response = chatbot.handle_message(user_message)
+    print(response)

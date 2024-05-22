@@ -4,7 +4,7 @@ from typing import Final
 from discord import Client, Intents, Message
 from dotenv import load_dotenv
 
-from nlu.pizzatalk_chatbot import PizzaTalkChatbot
+from nlu.chatbot import Chatbot
 
 load_dotenv()
 TOKEN: Final[str] = os.getenv("DISCORD_TOKEN")
@@ -13,8 +13,10 @@ intents: Intents = Intents.default()
 intents.message_content = True
 client: Client = Client(intents=intents)
 
-chatbot = PizzaTalkChatbot(
-    "output/savedmodels/order_entity_v2.h5",
+
+chatbot = Chatbot(
+    "output/savedmodels/order_entity_v4.h5",
+    "output/savedmodels/customer_info_entity_v1.h5",
     "output/savedmodels/intents_v2.bin",
     "src/nlu/responses.json",
 )

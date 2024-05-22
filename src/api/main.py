@@ -1,7 +1,8 @@
-from typing import Final
 import os
+from typing import Final
+
+from discord import Client, Intents, Message
 from dotenv import load_dotenv
-from discord import Intents, Client, Message
 from responses import get_response
 
 load_dotenv()
@@ -22,11 +23,7 @@ async def send_message(message: Message, user_message: str) -> None:
 
     try:
         response: str = get_response(user_message)
-        (
-            await message.author.send(response)
-            if is_private
-            else await message.channel.send(response)
-        )
+        (await message.author.send(response) if is_private else await message.channel.send(response))
     except Exception as e:
         print(e)
 

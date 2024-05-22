@@ -75,9 +75,7 @@ def translate_sentences(text: str, dictionary: dict):
 
 
 def remove_stopwords(text: str, stopwords_dictionary: set):
-    stopwords_regex = "|".join(
-        re.escape(stopword) for stopword in sorted(stopwords_dictionary, key=len, reverse=True)
-    )
+    stopwords_regex = "|".join(re.escape(stopword) for stopword in sorted(stopwords_dictionary, key=len, reverse=True))
     text = re.sub(r"\b(?:" + stopwords_regex + r")(?:\W|$)", " ", text)
     text = text.strip()
     text = re.sub(r"\s+", " ", text)

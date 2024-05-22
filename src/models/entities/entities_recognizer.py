@@ -91,7 +91,21 @@ class EntitiesRecognizer:
             return self.reformat_order_result(result)
         return self.reformat_customer_result(result)
 
-    def reformat_order_result(self, predicted_result):
+    def predict_order_with_index(self, text):
+        text = preprocessing(text, True)
+        processed_sentence = self.process_sentence(text)
+        words = processed_sentence["words"]
+        features = self.sentence_features(words)
+
+        labels = self.model.predict([features])[0]
+
+        result = {
+            "words": words,
+            "label": labels,
+        }
+        return self.reformat_order_result_with_index(result)
+
+    def reformat_order_result_with_index(self, predicted_result):
         output_dict = {}
         for index, (word, label) in enumerate(zip(predicted_result["words"], predicted_result["label"])):
             if label == "O":
@@ -99,6 +113,16 @@ class EntitiesRecognizer:
             if label not in output_dict:
                 output_dict[label] = []
             output_dict[label].append((word, index))
+        return output_dict
+
+    def reformat_order_result(self, predicted_result):
+        output_dict = {}
+        for word, label in zip(predicted_result["words"], predicted_result["label"]):
+            if label == "O":
+                continue
+            if label not in output_dict:
+                output_dict[label] = []
+            output_dict[label].append(word)
         return output_dict
 
     def reformat_customer_result(self, predicted_result):

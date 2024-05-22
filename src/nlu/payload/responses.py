@@ -110,10 +110,7 @@ class ResponsePayloadOptionDetail:
             size=data["size"] if data["size"] else None,
             option_id=data["optionId"] if data["optionId"] else None,
             stock_items=(
-                [
-                    ResponsePayloadStockItem.from_json(item)
-                    for item in data.get("stockItems", [])
-                ]
+                [ResponsePayloadStockItem.from_json(item) for item in data.get("stockItems", [])]
                 if data.get("stockItems")
                 else None
             ),
@@ -165,26 +162,17 @@ class ResponsePayloadProduct:
             description=data["description"] if data["description"] else None,
             image_path=data["imagePath"] if data["imagePath"] else None,
             options=(
-                [
-                    ResponsePayloadOption.from_json(item)
-                    for item in data.get("options", [])
-                ]
+                [ResponsePayloadOption.from_json(item) for item in data.get("options", [])]
                 if data.get("options")
                 else None
             ),
             option_details=(
-                [
-                    ResponsePayloadOptionDetail.from_json(item)
-                    for item in data.get("optionDetails", [])
-                ]
+                [ResponsePayloadOptionDetail.from_json(item) for item in data.get("optionDetails", [])]
                 if data.get("optionDetails")
                 else None
             ),
             stock_items=(
-                [
-                    ResponsePayloadStockItem.from_json(item)
-                    for item in data.get("stockItems", [])
-                ]
+                [ResponsePayloadStockItem.from_json(item) for item in data.get("stockItems", [])]
                 if data.get("stockItems")
                 else None
             ),
@@ -224,14 +212,9 @@ class ResponsePayloadCartItem:
             id=data["id"] if data["id"] else None,
             quantity=data["quantity"] if data["quantity"] else None,
             price=data["price"] if data["price"] else None,
-            product=ResponsePayloadProduct.from_json(data["product"])
-            if data["product"]
-            else None,
+            product=ResponsePayloadProduct.from_json(data["product"]) if data["product"] else None,
             option_details=(
-                [
-                    ResponsePayloadOptionDetail.from_json(item)
-                    for item in data.get("optionDetails", [])
-                ]
+                [ResponsePayloadOptionDetail.from_json(item) for item in data.get("optionDetails", [])]
                 if data.get("optionDetails")
                 else []
             ),
@@ -257,10 +240,7 @@ class ResponsePayloadCart:
         return ResponsePayloadCart(
             id=data["id"] if data["id"] else None,
             cart_items=(
-                [
-                    ResponsePayloadCartItem.from_json(item)
-                    for item in data.get("cartItems", [])
-                ]
+                [ResponsePayloadCartItem.from_json(item) for item in data.get("cartItems", [])]
                 if data.get("cartItems")
                 else None
             ),

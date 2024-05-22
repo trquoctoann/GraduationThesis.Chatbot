@@ -39,11 +39,9 @@ def get_correct_pizza_name(ordered_pizzas: list):
 
     for ordered_pizza in ordered_pizzas:
         cleaned_pizza = filter_pizza_name(ordered_pizza)
-        best_match = process.extractOne(
-            cleaned_pizza, correct_pizza_names, scorer=fuzz.ratio
-        )
-        if best_match[1] < 50:
-            errors.append(best_match[0])
+        best_match = process.extractOne(cleaned_pizza, correct_pizza_names, scorer=fuzz.ratio)
+        if best_match[1] < 80:
+            errors.append(ordered_pizza)
         else:
             valid_results.append(best_match[0])
 
@@ -189,7 +187,7 @@ def get_correct_crust_type(specified_crusts: list):
             errors.append(cleaned_crust)
         else:
             valid_results.append(cleaned_crust)
-    return valid_results, cleaned_crust
+    return valid_results, errors
 
 
 def get_correct_topping_name(specified_toppings: list):
@@ -222,11 +220,9 @@ def get_correct_topping_name(specified_toppings: list):
     errors = []
     for specified_topping in specified_toppings:
         specified_topping = specified_topping.replace("_", " ")
-        best_match = process.extractOne(
-            specified_topping, correct_topping_names, scorer=fuzz.ratio
-        )
-        if best_match[1] < 50:
-            errors.append(best_match[0])
+        best_match = process.extractOne(specified_topping, correct_topping_names, scorer=fuzz.ratio)
+        if best_match[1] < 80:
+            errors.append(specified_topping)
         else:
             valid_results.append(best_match[0])
 
